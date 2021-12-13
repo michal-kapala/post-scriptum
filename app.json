@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "post-scriptum",
+    "slug": "post-scriptum",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "post-scriptum"
+}
