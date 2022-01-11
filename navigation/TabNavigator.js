@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
 import { MainStackNavigator, AccountStackNavigator } from './StackNavigation';
 import { UserContext } from '../contexts/UserContext'
-import { HomeScreen } from '../screens/HomeScreen'
 
 const Tab = createBottomTabNavigator();
 

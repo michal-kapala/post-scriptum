@@ -11,6 +11,7 @@ const apiUrl = Constants.manifest.extra.apiUrl;
 
 const SignInScreen = ({ navigation }) => {
   const [signInError, setSignInError] = useState();
+  const error = 'Niepoprawny e-mail lub hasło';
   var userCtx = useContext(UserContext);
   var postCtx = useContext(PostContext);
 
@@ -94,7 +95,7 @@ const SignInScreen = ({ navigation }) => {
         console.log(`${reason} ${apiUrl}/auth/login`)
       });
     if (tokenStr && user_id) {
-      var params = new URLSearchParams({ "user-id": user_id });
+      var params = new URLSearchParams({ "user_id": user_id });
       postCtx.updatePosts(tokenStr, params);
     }
   }
@@ -128,7 +129,7 @@ const SignInScreen = ({ navigation }) => {
                 onChangeText={(val) => handlePasswordChange(val)}
                 />
                 <TouchableOpacity
-                onPress={updateSecureTextEntry}>
+                  onPress={() => updateSecureTextEntry()}>
                 {data.secureTextEntry ?
 
                     <Feather
@@ -156,10 +157,10 @@ const SignInScreen = ({ navigation }) => {
             </TouchableOpacity>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.loginButton} onPress={onSignInPress}>
-                <Text style={{ color: '#fff', fontWeight: '900' }}>Zaloguj się</Text>
+                  <Text style={{ color: '#fff', fontWeight: '900' }}>Zaloguj się</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.registerButton} onPress={() => console.log('\'Create account\' handler not implemented')}>
-                <Text style={{ color: '#fff', fontWeight: '900' }}>Utwórz konto</Text>
+                < Text style={{ color: '#fff', fontWeight: '900' }}>Utwórz konto</Text>
                 </TouchableOpacity>
             </View>
         

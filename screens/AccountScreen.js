@@ -4,10 +4,15 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { UserContext } from '../contexts/UserContext'
+import { PostContext } from '../contexts/PostContext';
+import Constants from 'expo-constants';
+
+const apiUrl = Constants.manifest.extra.apiUrl;
 
 const AccountScreen = ({ navigation }) => {
 
   const userCtx = useContext(UserContext);
+  const postCtx = useContext(PostContext);
 
   async function OnSignOut(navigation) {
     var status;
@@ -20,60 +25,70 @@ const AccountScreen = ({ navigation }) => {
     })
       .then(response => {
         status = response.status;
-        return response.json();
-      })
-      .then(body => {
-        if (status == 200) {
-          navigation.navigate('SignInScreen')
-        }
-      }).catch((reason) => {
+        if (status == 204) {
+          navigation.navigate('SignInScreen');
+          userCtx.setUserData({
+            loggedIn: false,
+            token: '',
+            userId: null,
+            email: '',
+            password: ''
+          });
+          postCtx.setPosts([]);
+      }})
+      .catch((reason) => {
         console.log(`${reason} ${apiUrl}/auth/logout`)
       });
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.welcome}>Witaj, Jan Kowalski!</Text>
-      </View>
-      <View style={styles.body}>
-        <View>
-          <TouchableOpacity style={styles.option} onPress={() => console.log('\'Change email\' handler not implemented')}>
-            <Text style={styles.optionText}>Zmień adres e-mail</Text>
-            <Feather
-              name="chevron-right"
-              color="#4A4A4A"
-              size={22}
-              style={{ textAlignVertical: 'center', paddingRight: 13 }}
-            />
+    <View style={{backgroundColor: '#ddd', height: '100%', marginTop: 25}}>
+      <View style={styles.container}>
+        <Text style={styles.titleText}>
+          Post Scriptum
+        </Text>
+        <View style={styles.header}>
+          <Text style={styles.welcome}>Witaj, {userCtx.userData.email}!</Text>
+        </View>
+        <View style={styles.body}>
+          <View>
+            <TouchableOpacity style={styles.option} onPress={() => console.log('\'Change email\' handler not implemented')}>
+              <Text style={styles.optionText}>Zmień adres e-mail</Text>
+              <Feather
+                name="chevron-right"
+                color="#4A4A4A"
+                size={22}
+                style={{ textAlignVertical: 'center', paddingRight: 13 }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity style={styles.option} onPress={() => console.log('\'Change password\' handler not implemented')}>
+              <Text style={styles.optionText}>Zmień hasło</Text>
+              <Feather
+                name="chevron-right"
+                color="#4A4A4A"
+                size={22}
+                style={{ textAlignVertical: 'center', paddingRight: 13 }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <TouchableOpacity style={styles.option} onPress={() => console.log('\'Delete account\' handler not implemented')}>
+              <Text style={styles.optionText}>Usuń konto</Text>
+              <Feather
+                name="chevron-right"
+                color="#4A4A4A"
+                size={22}
+                style={{ textAlignVertical: 'center', paddingRight: 13 }}
+              />
+            </TouchableOpacity>
+          </View>
+          {/*TODO: prawdziwe wylogowanie (appCtx, unieważnienie jwt))*/}
+          <TouchableOpacity style={styles.button} onPress={() => OnSignOut(navigation)}>
+            <Text style={styles.buttonText}>Wyloguj</Text>
           </TouchableOpacity>
         </View>
-        <View>
-          <TouchableOpacity style={styles.option} onPress={() => console.log('\'Change password\' handler not implemented')}>
-            <Text style={styles.optionText}>Zmień hasło</Text>
-            <Feather
-              name="chevron-right"
-              color="#4A4A4A"
-              size={22}
-              style={{ textAlignVertical: 'center', paddingRight: 13 }}
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity style={styles.option} onPress={() => console.log('\'Delete account\' handler not implemented')}>
-            <Text style={styles.optionText}>Usuń konto</Text>
-            <Feather
-              name="chevron-right"
-              color="#4A4A4A"
-              size={22}
-              style={{ textAlignVertical: 'center', paddingRight: 13 }}
-            />
-          </TouchableOpacity>
-        </View>
-        {/*TODO: prawdziwe wylogowanie (appCtx, unieważnienie jwt))*/}
-        <TouchableOpacity style={styles.button} onPress={(navigation) => OnSignOut(navigation)}>
-          <Text style={styles.buttonText}>Wyloguj</Text>
-        </TouchableOpacity>
       </View>
     </View>
   )
@@ -87,21 +102,22 @@ const height_logo = height * 0.22;
 //#362893
 
 const styles = StyleSheet.create({
+  titleText: {
+    textAlign: 'center',
+    paddingVertical: 10,
+    fontSize: 28,
+    backgroundColor: 'coral', //#FF7F50
+    color: '#FFF4E4'
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#FFF4E4'
   },
   header: {
-    flex: 2,
     alignItems: 'center',
   },
-  logo: {
-    width: height_logo,
-    height: height_logo,
-    marginTop: height * 0.05
-  },
   welcome: {
-    marginTop: height * 0.03,
+    marginTop: '15%',
     fontSize: 28,
     fontWeight: 'bold',
   },
@@ -123,14 +139,14 @@ const styles = StyleSheet.create({
   body: {
     flex: 2,
     alignItems: 'center',
-    marginTop: height * 0.03
+    marginTop: '15%'
   },
   button: {
     width: '30%',
     marginTop: height * 0.014,
     paddingVertical: 15,
     alignItems: 'center',
-    backgroundColor: '#4A4A4A',
+    backgroundColor: 'coral',
     borderRadius: 20,
   },
   buttonText: {

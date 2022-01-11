@@ -3,8 +3,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { PostContext } from '../contexts/PostContext';
+import { AdMobBanner } from 'expo-ads-admob';
 
-export default Post = ({postId, navigation}) => {
+export default AdView = ({postId, navigation}) => {
 
     {/*Kontekst postów*/}
     const postCtx = useContext(PostContext);
@@ -17,6 +18,7 @@ export default Post = ({postId, navigation}) => {
     {/*Post*/}
     return(
         <View style={styles.post}>
+            
             {/*Header*/}
             <View style={styles.header}>
                 {/*Image to be added*/}
@@ -24,7 +26,7 @@ export default Post = ({postId, navigation}) => {
                     {/*Author*/}
                     <Text style={{color: 'black', fontWeight: 'bold'}}>{post.author}</Text>
                     {/*Date & time*/}
-                    <Text style={{color: '#777', fontSize: 12}}>{post.datetime}</Text>
+                    <Text style={{color: '#777', fontSize: 12}}>{post.datetime} · Reklama</Text>
                 </View>
                 <View style={styles.iconContainer}>
                     <TouchableOpacity onPress={() => {}} style={{paddingRight: 5}}>
@@ -41,6 +43,13 @@ export default Post = ({postId, navigation}) => {
                 <Text style={{color: 'black'}}>{post.content}</Text>
             </View>
 
+            {/*AdMob banner*/}
+            <AdMobBanner
+                style={styles.banner}
+                bannerSize="adaptiveBanner"
+                adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID
+            />
+
             {/*Likes bar*/}
             <View style={styles.activityBar}>
                 {/*Likes*/}
@@ -55,8 +64,9 @@ export default Post = ({postId, navigation}) => {
                 </View>
             </View>
         </View>
+        
     )
-  }
+}
 
 const styles = StyleSheet.create({
     post: {
@@ -81,7 +91,11 @@ const styles = StyleSheet.create({
     },
     content: {
         marginHorizontal: '3%',
-        marginBottom: 12,
+        marginBottom: 6,
+    },
+    banner: {
+        alignItems: 'center',
+        marginBottom: 10,
     },
     activityBar: {
         paddingVertical: 10,
@@ -105,7 +119,7 @@ const styles = StyleSheet.create({
         color: 'coral'
     },
     creationInfo: {
-        flex: 1
+        flex: 1,
     },
     iconContainer: {
         flexDirection: 'row',

@@ -1,7 +1,9 @@
 import React, { useContext } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { Feather } from '@expo/vector-icons';
 import Post from '../components/Post'
+import AdView from '../components/AdView'
 import testPosts from '../components/TestPosts'
 import { PostContext } from '../contexts/PostContext'
 import { UserContext } from '../contexts/UserContext'
@@ -17,20 +19,33 @@ const HomeScreen = ({ navigation }) => {
     return(
     <View style={{backgroundColor: '#ddd', height: '100%', marginTop: 25}}>
         <ScrollView>
-        {/*Title*/}
-        <Text style={styles.titleText}>
-            Post Scriptum
-        </Text>
+        {/*Title bar*/}
+        <View style={styles.titleBar}>
+          <View>
+            <Text style={styles.titleText}>
+                Post Scriptum
+            </Text>
+          </View>
+          {/*Add icon*/}
+          <View style={styles.addIcon}>
+            <TouchableOpacity onPress={() => {}} style={{alignContent: 'flex-end'}}>
+              <Feather name="plus-square" size={30} color="black" />
+            </TouchableOpacity>
+          </View>
+        </View>
+        
 
         {/*Posts*/}
         <View style={styles.container}>
             <View style={styles.postContainer}>
-                {testPosts.map((post) => {
+                {postCtx.posts.map((post) => {
                     return(
                     <View key={post.id} style={{width: '100%', marginBottom: 15}}>
-                        <Post postId={post.id}
-                        navigation={navigation}
-                        />
+                        {post.ad ? 
+                          <AdView postId={post.id} navigation={navigation}/>
+                        :
+                          <Post postId={post.id} navigation={navigation}/>
+                        }
                     </View>)
                 })}
             </View>
@@ -45,11 +60,12 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   titleText: {
-      textAlign: 'center',
-      paddingVertical: 10,
       fontSize: 28,
-      backgroundColor: 'coral', //#FF7F50
-      color: '#FFF4E4'
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      color: '#FFF4E4',
+      paddingLeft: '25%'
   },
   container: {
     marginVertical: '4%',
@@ -139,4 +155,19 @@ const styles = StyleSheet.create({
   postContainer: {
     alignItems: 'center',
   },
+  titleBar: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'coral', //#FF7F50
+    textAlign: 'center',
+    paddingVertical: 10,
+    color: '#FFF4E4'
+  },
+  addIcon: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingRight: 25,
+    paddingTop: 5
+  }
 });

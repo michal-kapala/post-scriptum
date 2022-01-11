@@ -1,6 +1,11 @@
 {
   "expo": {
     "name": "post-scriptum",
+    "android": {
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-1968751945081401~2929028084"
+      }
+    },
     "slug": "post-scriptum",
     "version": "1.0.0",
     "assetBundlePatterns": [

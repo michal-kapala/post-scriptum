@@ -11,7 +11,7 @@ const apiUrl = Constants.manifest.extra.apiUrl;
 {/*Zarządzanie stanem i dostępem do niego*/}
 export const PostDataProvider = ({ children }) => {
 
-    const [posts, setPosts] = useState(testPosts); //should be empty list
+    const [posts, setPosts] = useState([]); //should be empty list
     const userCtx = useContext(UserContext);
 
     useEffect(() => {
