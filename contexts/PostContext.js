@@ -128,6 +128,39 @@ export const PostDataProvider = ({ children }) => {
         return newJwt;
     }
 
+    async function deletePost(token, params) {
+      var status = null, newJwt = null;
+
+      var res = await fetch(`${apiUrl}/posts` + params,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          method: 'DELETE'
+        })
+        .then(async response => { 
+          status = response.status;
+          switch(status) {
+            case 204:
+              // Deleted - No content
+              break;
+            case 401: 
+              // jwt expired
+              if(userCtx.userData.email) {
+                var {newToken, userId} = await userCtx.relogin();
+                newJwt = newToken;
+                console.log('Refreshed jwt token for user ' + userId + ':\n' + newToken);
+              }
+              break;
+            default: 
+              console.log('Unhandled deletePost response status: ' + status);
+              break;
+          }
+        });
+        return newJwt;
+    }
+
     async function like(token, id) {
       var status = null, newJwt = null;
 
@@ -207,7 +240,7 @@ export const PostDataProvider = ({ children }) => {
     }
 
     return(
-        <PostContext.Provider value={{ posts, setPosts, updatePosts, addPost, getPost }}>
+        <PostContext.Provider value={{ posts, setPosts, updatePosts, addPost, deletePost, getPost }}>
             {children}
         </PostContext.Provider>
       );

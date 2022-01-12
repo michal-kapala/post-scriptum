@@ -3,17 +3,24 @@ import { View, Text, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { PostContext } from '../contexts/PostContext';
+import { UserContext } from '../contexts/UserContext';
 import { AdMobBanner } from 'expo-ads-admob';
 
 export default AdView = ({postId, navigation}) => {
 
     {/*Kontekst postów*/}
     const postCtx = useContext(PostContext);
+    const userCtx = useContext(UserContext);
     var post = postCtx.getPost(postId);
 
     {/*Like icon state*/}
     {/*For testing only, should use postCtx.updateLike() instead*/}
     const [liked, setLiked] = useState((post.liked ? 'true' : false));
+
+    async function deletePost(id) {
+        await postCtx.deletePost(userCtx.userData.token, new URLSearchParams({ "post_id": id }));
+        await postCtx.updatePosts(userCtx.userData.token, new URLSearchParams({ "user_id": userCtx.userData.userId }));
+    }
 
     {/*Post*/}
     return(
@@ -32,7 +39,7 @@ export default AdView = ({postId, navigation}) => {
                     <TouchableOpacity onPress={() => {}} style={{paddingRight: 5}}>
                         <MaterialIcons name="edit" size={24} color='coral' />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {}} style={{paddingRight: 10}}>
+                    <TouchableOpacity onPress={() => deletePost(post.post_id)} style={{paddingRight: 10}}>
                         <FontAwesome name="window-close" size={24} color='coral'/>
                     </TouchableOpacity>
                 </View>
