@@ -11,7 +11,7 @@ const apiUrl = Constants.manifest.extra.apiUrl;
 {/*Zarządzanie stanem i dostępem do niego*/}
 export const PostDataProvider = ({ children }) => {
 
-    const [posts, setPosts] = useState([]); //should be empty list
+    const [posts, setPosts] = useState([]);
     const userCtx = useContext(UserContext);
 
     useEffect(() => {
@@ -94,6 +94,40 @@ export const PostDataProvider = ({ children }) => {
       updatePosts(token, params);
     }
 
+    async function addPost(post, token) {
+      var status = null, newJwt = null;
+
+      var res = await fetch(`${apiUrl}/posts`,
+        {
+          body: JSON.stringify(post),
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          method: 'POST'
+        })
+        .then(async response => { 
+          status = response.status;
+          switch(status) {
+            case 201:
+              // Created
+              break;
+            case 401: 
+              // jwt expired
+              if(userCtx.userData.email) {
+                var {newToken, userId} = await userCtx.relogin();
+                newJwt = newToken;
+                console.log('Refreshed jwt token for user ' + userId + ':\n' + newToken);
+              }
+              break;
+            default: 
+              console.log('Unhandled addPost response status: ' + status);
+              break;
+          }
+        });
+        return newJwt;
+    }
+
     async function like(token, id) {
       var status = null, newJwt = null;
 
@@ -173,7 +207,7 @@ export const PostDataProvider = ({ children }) => {
     }
 
     return(
-        <PostContext.Provider value={{ posts, setPosts, updatePosts, getPost }}>
+        <PostContext.Provider value={{ posts, setPosts, updatePosts, addPost, getPost }}>
             {children}
         </PostContext.Provider>
       );
